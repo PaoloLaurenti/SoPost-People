@@ -9,14 +9,12 @@ defmodule SopostPeople.PersonControllerTest do
   end
 
   test "lists all people on index", %{conn: conn} do
-    people = [ %{name: "name1", role: "role1", location: "location1", photo: "http://photo1.png" },
-               %{name: "name2", role: "role2", location: "location2", photo: "http://photo2.png" } ]
-    people_changesets = people |> Enum.map(&(Person.changeset(%Person{}, &1)))
+    people_changesets = people() |> Enum.map(&(Person.changeset(%Person{}, &1)))
     Enum.each(people_changesets, &Repo.insert!(&1))
 
     response = get conn, person_path(conn, :index)
 
-    people
+    people()
       |> Enum.each(fn(person) ->
         assert html_response(response, 200) =~ person.name
         assert html_response(response, 200) =~ person.role
@@ -26,15 +24,12 @@ defmodule SopostPeople.PersonControllerTest do
   end
 
   test "list people by their location", %{conn: conn} do
-    people = [ %{name: "name1", role: "role1", location: "location1", photo: "http://photo1.png" },
-               %{name: "name2", role: "role2", location: "location2", photo: "http://photo2.png" },
-               %{name: "name3", role: "role3", location: "location1", photo: "http://photo3.png" }]
-    people_changesets = people |> Enum.map(&(Person.changeset(%Person{}, &1)))
+    people_changesets = people() |> Enum.map(&(Person.changeset(%Person{}, &1)))
     Enum.each(people_changesets, &Repo.insert!(&1))
 
     response = get conn, person_path(conn, :index, %{location: "location1"})
 
-    people
+    people()
       |> Enum.filter(fn(person) -> person.location == "location1" end)
       |> Enum.each(fn(person) ->
         assert html_response(response, 200) =~ person.name
@@ -46,5 +41,11 @@ defmodule SopostPeople.PersonControllerTest do
       refute html_response(response, 200) =~ "role2"
       refute html_response(response, 200) =~ "location2"
       refute html_response(response, 200) =~ "http://photo2.png"
+  end
+
+  defp people() do
+    [ %{name: "name1", role: "role1", location: "location1", photo: "http://photo1.png" },
+      %{name: "name2", role: "role2", location: "location2", photo: "http://photo2.png" },
+      %{name: "name3", role: "role3", location: "location1", photo: "http://photo3.png" }]
   end
 end
