@@ -21,7 +21,8 @@ defmodule SopostPeople.PersonControllerTest do
     people_changesets = people() |> Enum.map(&(Person.changeset(%Person{}, &1)))
     Enum.each(people_changesets, &Repo.insert!(&1))
 
-    response = get conn, person_path(conn, :index, %{location: "location1"})
+    search_location = Enum.at(people_in_location1(), 0).location |> String.upcase
+    response = get conn, person_path(conn, :index, %{location: search_location})
 
     people_in_location1() |> assert_all_people_in_response(response)
     people_in_location2() |> assert_no_people_in_response(response)

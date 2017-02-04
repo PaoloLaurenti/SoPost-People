@@ -4,7 +4,8 @@ defmodule SopostPeople.PersonController do
   alias SopostPeople.Person
 
   def index(conn, %{"location" => location}) do
-    query = from p in Person, where: p.location == ^location
+    sanitized_location = String.downcase(location)
+    query = from p in Person, where: p.location == ^sanitized_location
     people = Repo.all(query)
     render conn, "index.html", people: people
   end
