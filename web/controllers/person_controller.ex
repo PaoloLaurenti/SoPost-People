@@ -1,7 +1,10 @@
 defmodule SopostPeople.PersonController do
   use SopostPeople.Web, :controller
 
+  alias SopostPeople.Person
+
   def index(conn, _params) do
-    render conn, "index.html"
+    people = Repo.all(Person)
+    render conn, "index.html", people: people
   end
 end

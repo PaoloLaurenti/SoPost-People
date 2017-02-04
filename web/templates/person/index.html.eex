@@ -1,1 +1,21 @@
 <h2>SoPost people list</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Role</th>
+      <th>Location</th>
+      <th>Photo</th>
+  </thead>
+  <tbody>
+<%= for person <- @people do %>
+    <tr>
+      <td><%= person.name %></td>
+      <td><%= person.role %></td>
+      <td><%= person.location %></td>
+      <td><img src="<%= person.photo %>" width="200" height="200"><img/></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
