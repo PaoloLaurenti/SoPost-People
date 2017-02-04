@@ -1,4 +1,4 @@
-defmodule SopostPeople.PageController do
+defmodule SopostPeople.PersonController do
   use SopostPeople.Web, :controller
 
   def index(conn, _params) do
