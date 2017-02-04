@@ -14,13 +14,7 @@ defmodule SopostPeople.PersonControllerTest do
 
     response = get conn, person_path(conn, :index)
 
-    people()
-      |> Enum.each(fn(person) ->
-        assert html_response(response, 200) =~ person.name
-        assert html_response(response, 200) =~ person.role
-        assert html_response(response, 200) =~ person.location
-        assert html_response(response, 200) =~ person.photo
-      end)
+    people() |> assert_all_people_in_response(response)
   end
 
   test "list people by their location", %{conn: conn} do
@@ -29,20 +23,8 @@ defmodule SopostPeople.PersonControllerTest do
 
     response = get conn, person_path(conn, :index, %{location: "location1"})
 
-    people_in_location1()
-      |> Enum.each(fn(person) ->
-        assert html_response(response, 200) =~ person.name
-        assert html_response(response, 200) =~ person.role
-        assert html_response(response, 200) =~ person.location
-        assert html_response(response, 200) =~ person.photo
-      end)
-    people_in_location2()
-      |> Enum.each(fn(person) ->
-        refute html_response(response, 200) =~ person.name
-        refute html_response(response, 200) =~ person.role
-        refute html_response(response, 200) =~ person.location
-        refute html_response(response, 200) =~ person.photo
-      end)
+    people_in_location1() |> assert_all_people_in_response(response)
+    people_in_location2() |> assert_no_people_in_response(response)
   end
 
   defp people() do
@@ -57,5 +39,25 @@ defmodule SopostPeople.PersonControllerTest do
   defp people_in_location2 do
     [ %{name: "name2", role: "role2", location: "location2", photo: "http://photo2.png" },
       %{name: "name4", role: "role4", location: "location2", photo: "http://photo4.png" } ]
+  end
+
+  defp assert_all_people_in_response(people, response) do
+    people
+      |> Enum.each(fn(person) ->
+        assert html_response(response, 200) =~ person.name
+        assert html_response(response, 200) =~ person.role
+        assert html_response(response, 200) =~ person.location
+        assert html_response(response, 200) =~ person.photo
+      end)
+  end
+
+  defp assert_no_people_in_response(people, response) do
+    people
+      |> Enum.each(fn(person) ->
+        refute html_response(response, 200) =~ person.name
+        refute html_response(response, 200) =~ person.role
+        refute html_response(response, 200) =~ person.location
+        refute html_response(response, 200) =~ person.photo
+      end)
   end
 end
