@@ -5,7 +5,7 @@ defmodule SopostPeople.PersonControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"
-    assert html_response(conn, 200) =~ "SoPost people list"
+    assert html_response(conn, 200) =~ "People list"
   end
 
   test "lists all people on index", %{conn: conn} do
