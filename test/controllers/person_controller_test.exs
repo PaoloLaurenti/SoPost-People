@@ -33,13 +33,13 @@ defmodule SopostPeople.PersonControllerTest do
   end
 
   defp people_in_location1 do
-    [ %{name: "name1", role: "role1", location: "location1", photo: "http://photo1.png" },
-      %{name: "name3", role: "role3", location: "location1", photo: "http://photo3.png" }]
+    [ %{name: "Rame1", role: "Role1", location: "Location1", photo: "http://photo1.png" },
+      %{name: "Rame3", role: "Role3", location: "Location1", photo: "http://photo3.png" }]
   end
 
   defp people_in_location2 do
-    [ %{name: "name2", role: "role2", location: "location2", photo: "http://photo2.png" },
-      %{name: "name4", role: "role4", location: "location2", photo: "http://photo4.png" } ]
+    [ %{name: "Rame2", role: "Role2", location: "Location2", photo: "http://photo2.png" },
+      %{name: "Rame4", role: "Role4", location: "Location2", photo: "http://photo4.png" } ]
   end
 
   defp assert_all_people_in_response(people, response) do
