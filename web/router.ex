@@ -19,9 +19,4 @@ defmodule SopostPeople.Router do
     get "/", PersonController, :index
     get "/:location", PersonController, :index
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", SopostPeople do
-  #   pipe_through :api
-  # end
 end

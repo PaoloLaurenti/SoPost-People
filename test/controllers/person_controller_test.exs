@@ -4,13 +4,15 @@ defmodule SopostPeople.PersonControllerTest do
   alias SopostPeople.Person
 
   test "GET /", %{conn: conn} do
-    conn = get conn, "/"
-    assert html_response(conn, 200) =~ "People list"
+    setup_db()
+
+    response = get conn, "/"
+
+    assert html_response(response, 200) =~ "People list"
   end
 
   test "lists all people on index", %{conn: conn} do
-    people_changesets = people() |> Enum.map(&(Person.changeset(%Person{}, &1)))
-    Enum.each(people_changesets, &Repo.insert!(&1))
+    setup_db()
 
     response = get conn, person_path(conn, :index)
 
@@ -18,14 +20,27 @@ defmodule SopostPeople.PersonControllerTest do
   end
 
   test "list people by their location", %{conn: conn} do
-    people_changesets = people() |> Enum.map(&(Person.changeset(%Person{}, &1)))
-    Enum.each(people_changesets, &Repo.insert!(&1))
+    setup_db()
 
     search_location = Enum.at(people_in_location1(), 0).location |> String.upcase
     response = get conn, person_path(conn, :index, %{location: search_location})
 
     people_in_location1() |> assert_all_people_in_response(response)
     people_in_location2() |> assert_no_people_in_response(response)
+  end
+
+  test "show that there is no person when listing people by a location with no one", %{conn: conn} do
+    setup_db()
+
+    response = get conn, person_path(conn, :index, %{location: "location_with_no_one"})
+
+    people() |> assert_no_people_in_response(response)
+    assert html_response(response, 200) =~ "No person"
+  end
+
+  defp setup_db() do
+    people_changesets = people() |> Enum.map(&(Person.changeset(%Person{}, &1)))
+    Enum.each(people_changesets, &Repo.insert!(&1))
   end
 
   defp people() do
